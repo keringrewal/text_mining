@@ -5,6 +5,7 @@ library(ggplot2)
 library(tidyr)
 library(wordcloud)
 library(reshape2)
+
 clinton.1 <- readtext("clinton.txt") 
 clinton.1 <- as.data.frame(clinton.1) %>% unnest_tokens(word, text)
 data(stop_words)
