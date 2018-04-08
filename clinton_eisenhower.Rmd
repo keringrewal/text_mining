@@ -1,0 +1,65 @@
+---
+title: "Clinton and Eisenhower Speeches"
+author: "Janie Briglio and Kerin Grewal"
+date: "April 8, 2018"
+output: 
+  pdf_document: 
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+library(readtext)
+library(dplyr)
+library(tidytext)
+library(ggplot2)
+library(tidyr)
+library(wordcloud)
+library(reshape2)
+library(gridExtra)
+clinton.1 <- readtext("clinton.txt") 
+clinton.1 <- as.data.frame(clinton.1) %>% unnest_tokens(word, text)
+data(stop_words)
+clinton.2 <- clinton.1 %>% anti_join(stop_words) 
+clinton.3 <- clinton.2 %>% count(word, sort = TRUE)
+clinton.4 <- as_tibble(clinton.3)
+
+eisenhower.1 <- readtext("eisenhower.txt") 
+eisenhower.1 <- as.data.frame(eisenhower.1) %>% unnest_tokens(word, text)
+data(stop_words)
+eisenhower.2 <- eisenhower.1 %>% anti_join(stop_words) 
+eisenhower.3 <- eisenhower.2 %>% count(word, sort = TRUE)
+eisenhower.4 <- as_tibble(eisenhower.3)
+
+```
+
+#The Most Used Words in Each Speech
+```{r, echo=FALSE}
+plot1 <- clinton.4 %>%
+  filter(n >= 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  ylim(0, 50) +
+  geom_col() +
+  labs(title = "Clinton") +
+  xlab(NULL) +
+  coord_flip()
+
+plot2 <- eisenhower.4 %>%
+  filter(n >= 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  ylim(0, 50) +
+  geom_col() +
+  labs(title= "Eisenhower") +
+  xlab(NULL) +
+  coord_flip()
+
+grid.arrange(plot1, plot2)
+```
+
+
