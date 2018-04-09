@@ -28,6 +28,8 @@ clinton.2 <- clinton.1 %>% anti_join(stop_words)
 clinton.3 <- clinton.2 %>% count(word, sort = TRUE)
 clinton.4 <- as_tibble(clinton.3)
 
+clinton_top <- top_n(clinton.4, 10)
+
 eisenhower.1 <- readtext("eisenhower.txt") 
 eisenhower.1 <- as.data.frame(eisenhower.1) %>% unnest_tokens(word, text)
 data(stop_words)
@@ -35,12 +37,14 @@ eisenhower.2 <- eisenhower.1 %>% anti_join(stop_words)
 eisenhower.3 <- eisenhower.2 %>% count(word, sort = TRUE)
 eisenhower.4 <- as_tibble(eisenhower.3)
 
+eisenhower_top <- top_n(eisenhower.4, 10)
+
 ```
 
-#The Most Used Words in Each Speech
+
+##The most used words in each speech
 ```{r, echo=FALSE}
-plot1 <- clinton.4 %>%
-  filter(n >= 15) %>%
+plot1 <- clinton_top %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   ylim(0, 50) +
@@ -49,8 +53,7 @@ plot1 <- clinton.4 %>%
   xlab(NULL) +
   coord_flip()
 
-plot2 <- eisenhower.4 %>%
-  filter(n >= 15) %>%
+plot2 <- eisenhower_top %>%
   mutate(word = reorder(word, n)) %>%
   ggplot(aes(word, n)) +
   ylim(0, 50) +
@@ -59,7 +62,48 @@ plot2 <- eisenhower.4 %>%
   xlab(NULL) +
   coord_flip()
 
-grid.arrange(plot1, plot2)
+grid.arrange(plot2, plot1)
 ```
+
+```{r, include= FALSE}
+clinton.sentiment <- clinton.4 %>%
+  inner_join(get_sentiments("bing")) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative)
+
+eisenhower.sentiment <- eisenhower.4 %>%
+  inner_join(get_sentiments("bing")) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative)
+
+```
+
+###President Dwight D. Eisenhower delivered his state of the union address on Thursday, January 6, 1955. This was just after WWII ended and FDR left office. His speech addressed how to avoid a "nuclear holocaust", for at the time there appeared to be a high liklihood of nuclear warfare. He also discussed the "anxieties of this divided world". On a more positive note, he mentioned that the country's economic sucesses could be attributed to raw materials and energy, and how to continue to have such successes without exploitation. 
+
+###President Bill Clinton delivered his first state of the union address on January 25th, 1994. In his speech he promoted the Clinton health care plan, wanted to guarentee every American access to private health insurance. He also wanted to cut down on crime and expand gun control and access to drug treatment and education. Clinton's presidency was during the longest period of peacetime economic expansion in American history. He also left office with the highest end-of-office approval rating of any U.S. preisdent since WWII.
+
+\pagebreak
+
+
+##Comparing positive and negative sentiments in each speech
+```{r, echo = FALSE}
+clinton.plot <- ggplot(clinton.sentiment, aes(word, sentiment, fill = word)) +
+  geom_col(show.legend = FALSE)+
+  ylim(-17, 17) +
+  labs(title = "Clinton") +
+  theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank())
+
+eisenhower.plot <- ggplot(eisenhower.sentiment, aes(word, sentiment, fill = word)) +
+  geom_col(show.legend = FALSE)+
+  ylim(-17, 17) +
+  labs(title = "Eisenhower") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+eisenhower.plot
+clinton.plot
+```
+
 
 
