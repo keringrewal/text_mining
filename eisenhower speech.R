@@ -47,3 +47,8 @@ ggplot(eisenhower.sentiment3, aes(word, score, fill = word)) +
   geom_col(show.legend = FALSE) +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+
+eisenhower.sentiment4 <- eisenhower.4 %>%
+  inner_join(get_sentiments("nrc")) %>%
+  spread(sentiment, n, fill = 0) %>% 
+  select("word", "joy", "anger", "anticipation")
