@@ -76,6 +76,21 @@ eisenhower.sentiment <- eisenhower.4 %>%
   spread(sentiment, n, fill = 0) %>%
   mutate(sentiment = positive - negative)
 
+clinton.sentiment2 <- clinton.4 %>%
+  inner_join(get_sentiments("nrc")) %>%
+  spread(sentiment, n, fill = 0) %>% 
+  select("word", "joy", "anger", "anticipation")
+
+eisenhower.sentiment2 <- eisenhower.4 %>%
+  inner_join(get_sentiments("nrc")) %>%
+  spread(sentiment, n, fill = 0) %>% 
+  select("word", "joy", "anger", "anticipation")
+
+clinton.sentiment3 <- clinton.4 %>%
+  inner_join(get_sentiments("afinn"))
+
+eisenhower.sentiment3 <- eisenhower.4 %>%
+  inner_join(get_sentiments("afinn"))
 ```
 
 ###President Dwight D. Eisenhower delivered his state of the union address on Thursday, January 6, 1955. This was just after WWII ended and FDR left office. His speech addressed how to avoid a "nuclear holocaust", for at the time there appeared to be a high liklihood of nuclear warfare. He also discussed the "anxieties of this divided world". On a more positive note, he mentioned that the country's economic sucesses could be attributed to raw materials and energy, and how to continue to have such successes without exploitation. 
@@ -86,6 +101,7 @@ eisenhower.sentiment <- eisenhower.4 %>%
 
 
 ##Comparing positive and negative sentiments in each speech
+###In Clinton's speech, the beginning of the speech has a high concentration of very negative sentients, then the speech ends with a high concentration in more positive sentiments. While Eisenhower's speech also begins with more negative sentiments, they are not as extreme. Also, there is a large spike immediately after that in postitive sentiments then it levels off to less emotionally charged language. 
 ```{r, echo = FALSE}
 clinton.plot <- ggplot(clinton.sentiment, aes(word, sentiment, fill = word)) +
   geom_col(show.legend = FALSE)+
@@ -105,5 +121,59 @@ eisenhower.plot
 clinton.plot
 ```
 
+\pagebreak 
 
+##Comparing presence of joy, anger and anticipation in speeches
+###Clinton's Speech 
+###Clinton's speech uses many "joy" words through out the speech, with a high concentration of "anger" words towards the beginning and then ends the speech with "anticipation" words. 
+```{r, echo = FALSE}
+ggplot(clinton.sentiment2, aes(word, joy, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(clinton.sentiment2, aes(word, anger, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(clinton.sentiment2, aes(word, anticipation, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
 
+\pagebreak
+
+###Eisenhower's Speech 
+###Eisenhower's speech begins with more "anger" words, then transitions into more "joy" words, which continues until the end of the speech. Close to the middle of the speech, "anticipation" words peak and continue until the end of the speech. 
+```{r, echo=FALSE}
+ggplot(eisenhower.sentiment2, aes(word, joy, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(eisenhower.sentiment2, aes(word, anger, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(eisenhower.sentiment2, aes(word, anticipation, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+
+\pagebreak 
+
+##Comparing words by AFINN score
+
+###Both of the speeches have very similar AFINN scores throughout their speeches. The scores for both are fairly balances between positive and negative through the entire speech. 
+```{r, echo=FALSE}
+ggplot(clinton.sentiment3, aes(word, score, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Clinton") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(eisenhower.sentiment3, aes(word, score, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Eisenhower") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
