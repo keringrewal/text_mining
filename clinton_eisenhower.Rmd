@@ -143,6 +143,45 @@ ggplot(clinton.sentiment2, aes(word, anticipation, fill = word)) +
 
 \pagebreak
 
+###Here are the top 10 joyful and angry words in Clinton's speech, represented in the graphs above.
+```{r, echo=FALSE}
+clinton.joy <- subset(clinton.sentiment2, select = c(word, joy))
+clinton.joy <- clinton.joy[-row(clinton.joy)[clinton.joy == 0],]
+clinton.joy1 <- clinton.joy[order(-clinton.joy$joy), ]
+
+clinton.joy1 <- head(clinton.joy1, 10)
+
+joy <- clinton.joy1 %>%
+  mutate(word = reorder(word, joy)) %>%
+  ggplot(aes(word, joy)) +
+  geom_col() +
+  ylim(0, 25) +
+  xlab(NULL) +
+  labs(title = "Joy") +
+  coord_flip()
+
+clinton.anger <- subset(clinton.sentiment2, select = c(word, anger))
+clinton.anger <- clinton.anger[-row(clinton.anger)[clinton.anger == 0],]
+clinton.anger1 <- clinton.anger[order(-clinton.anger$anger), ]
+
+clinton.anger1 <- head(clinton.anger1, 10)
+
+anger <- clinton.anger1 %>%
+  mutate(word = reorder(word, anger)) %>%
+  ggplot(aes(word, anger)) +
+  geom_col() +
+  ylim(0, 25) +
+  xlab(NULL) +
+  labs(title = "Anger") +
+  coord_flip()
+
+grid.arrange(joy, anger)
+```
+
+####*It is important to note that money is considered both an angry and joyful word, as it can be interperted as either of the two, situationally.
+
+\pagebreak
+
 ###Eisenhower's Speech 
 ###Eisenhower's speech begins with more "anger" words, then transitions into more "joy" words, which continues until the end of the speech. Close to the middle of the speech, "anticipation" words peak and continue until the end of the speech. 
 ```{r, echo=FALSE}
@@ -160,11 +199,49 @@ ggplot(eisenhower.sentiment2, aes(word, anticipation, fill = word)) +
         axis.ticks.x=element_blank())
 ```
 
+\pagebreak
+
+###Here are the top 10 joyful and angry words in Eisenhower's speech, represented in the graphs above.
+```{r, echo=FALSE}
+eisenhower.joy <- subset(eisenhower.sentiment2, select = c(word, joy))
+eisenhower.joy <- eisenhower.joy[-row(eisenhower.joy)[eisenhower.joy == 0],]
+eisenhower.joy1 <- eisenhower.joy[order(-eisenhower.joy$joy), ]
+
+eisenhower.joy1 <- head(eisenhower.joy1, 10)
+
+joy1 <- eisenhower.joy1 %>%
+  mutate(word = reorder(word, joy)) %>%
+  ggplot(aes(word, joy)) +
+  ylim(0, 25) +
+  geom_col() +
+  xlab(NULL) +
+  labs(title = "Joy") +
+  coord_flip()
+
+eisenhower.anger <- subset(eisenhower.sentiment2, select = c(word, anger))
+eisenhower.anger <- eisenhower.anger[-row(eisenhower.anger)[eisenhower.anger == 0],]
+eisenhower.anger1 <- eisenhower.anger[order(-eisenhower.anger$anger), ]
+
+eisenhower.anger1 <- head(eisenhower.anger1, 10)
+
+anger1 <- eisenhower.anger1 %>%
+  mutate(word = reorder(word, anger)) %>%
+  ggplot(aes(word, anger)) +
+  ylim(0, 25) +
+  geom_col() +
+  xlab(NULL) +
+  labs(title = "Anger") +
+  coord_flip()
+
+grid.arrange(joy1, anger1)
+```
+
+
 \pagebreak 
 
 ##Comparing words by AFINN score
 
-###Both of the speeches have very similar AFINN scores throughout their speeches. The scores for both are fairly balances between positive and negative through the entire speech. 
+###Both of the speeches have very similar AFINN scores throughout their speeches. The scores for both are fairly balances between positive and negative.
 ```{r, echo=FALSE}
 ggplot(clinton.sentiment3, aes(word, score, fill = word)) +
   geom_col(show.legend = FALSE) +

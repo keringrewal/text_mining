@@ -55,3 +55,26 @@ ggplot(eisenhower.sentiment, aes(word, sentiment, fill = word)) +
   geom_col(show.legend = FALSE)+
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+
+
+clinton.sentiment2 <- clinton.4 %>%
+  inner_join(get_sentiments("nrc")) %>%
+  spread(sentiment, n, fill = 0)
+
+ggplot(clinton.sentiment2, aes(word, joy, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+clinton.joy <- subset(clinton.sentiment2, select = c(word, joy))
+clinton.joy <- clinton.joy[-row(clinton.joy)[clinton.joy == 0],]
+clinton.joy1 <- clinton.joy[order(-clinton.joy$joy), ]
+
+clinton.joy1 <- head(clinton.joy1, 10)
+
+clinton.joy1 %>%
+  mutate(word = reorder(word, joy)) %>%
+  ggplot(aes(word, joy)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip()
