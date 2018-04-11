@@ -34,13 +34,25 @@ clinton.sentiment2 <- clinton.4 %>%
   inner_join(get_sentiments("nrc")) %>%
   spread(sentiment, n, fill = 0)
 
-ggplot(clinton.sentiment2, aes(word, sentiment, fill = word)) +
+ggplot(clinton.sentiment2, aes(word, joy, fill = word)) +
   geom_col(show.legend = FALSE) +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
 
+clinton.joy <- subset(clinton.sentiment2, select = c(word, joy))
+clinton.joy1 <- clinton.joy[order(joy), ]
+
+clinton.joy %>% filter(n >= 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip()
+
+
 clinton.sentiment3 <- clinton.4 %>%
   inner_join(get_sentiments("afinn"))
+
 
 ggplot(clinton.sentiment3, aes(word, score, fill = word)) +
   geom_col(show.legend = FALSE) +
