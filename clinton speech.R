@@ -32,9 +32,18 @@ ggplot(clinton.sentiment1, aes(word, sentiment, fill = word)) +
 
 clinton.sentiment2 <- clinton.4 %>%
   inner_join(get_sentiments("nrc")) %>%
-  spread(sentiment, n, fill = 0)
+  spread(sentiment, n, fill = 0) %>% 
+  select("word", "joy", "anger", "anticipation")
 
-ggplot(clinton.sentiment2, aes(word, sentiment, fill = word)) +
+ggplot(clinton.sentiment2, aes(word, joy, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(clinton.sentiment2, aes(word, anger, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(clinton.sentiment2, aes(word, anticipation, fill = word)) +
   geom_col(show.legend = FALSE) +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
@@ -46,8 +55,3 @@ ggplot(clinton.sentiment3, aes(word, score, fill = word)) +
   geom_col(show.legend = FALSE) +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
-
-clinton.sentiment4 <- clinton.4 %>%
-  inner_join(get_sentiments("nrc")) %>%
-  spread(sentiment, n, fill = 0) %>% 
-  select("word", "joy", "anger", "anticipation")

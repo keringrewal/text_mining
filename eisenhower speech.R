@@ -32,10 +32,18 @@ ggplot(eisenhower.sentiment1, aes(word, sentiment, fill = word)) +
 
 eisenhower.sentiment2 <- eisenhower.4 %>%
   inner_join(get_sentiments("nrc")) %>%
-  spread(sentiment, n, fill = 0) %>%
-  mutate(sentiment = positive - negative)
+  spread(sentiment, n, fill = 0) %>% 
+  select("word", "joy", "anger", "anticipation")
 
-ggplot(eisenhower.sentiment2, aes(word, sentiment, fill = word)) +
+ggplot(eisenhower.sentiment2, aes(word, joy, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(eisenhower.sentiment2, aes(word, anger, fill = word)) +
+  geom_col(show.legend = FALSE) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+ggplot(eisenhower.sentiment2, aes(word, anticipation, fill = word)) +
   geom_col(show.legend = FALSE) +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
@@ -47,8 +55,3 @@ ggplot(eisenhower.sentiment3, aes(word, score, fill = word)) +
   geom_col(show.legend = FALSE) +
   theme(axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
-
-eisenhower.sentiment4 <- eisenhower.4 %>%
-  inner_join(get_sentiments("nrc")) %>%
-  spread(sentiment, n, fill = 0) %>% 
-  select("word", "joy", "anger", "anticipation")
